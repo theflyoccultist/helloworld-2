@@ -7,10 +7,10 @@ enum suit_card { CLUB, DIAMOND, HEART, SPADE };
 const char *SUIT[] = { "CLUB", "DIAMOND", "HEART", "SPADE" };
 
 // Define pips
-enum pips_card { PIP_A, PIP_2, PIP_3, PIP_4, PIP_5, PIP_6, PIP_7, PIP_8, PIP_9, PIP_J, PIP_Q, PIP_K };
+enum pips_card { PIP_A, PIP_2, PIP_3, PIP_4, PIP_5, PIP_6, PIP_7, PIP_8, PIP_9, PIP_10, PIP_J, PIP_Q, PIP_K };
 const char *PIPS[] = { "Ace", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Jack", "Queen", "King" };
 
-#define NUM_PIPS (PIP_K + 1) // If i don't do this it skips the King cards
+#define NUM_PIPS PIP_K
 
 #define DECK_SIZE 52
 #define DRAW_SIZE 7
