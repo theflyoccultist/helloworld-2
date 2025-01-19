@@ -49,22 +49,44 @@ void shuffle_deck() {
     }
 }
 
-int pairs_count = 0;
+// I gotta access those at the main() function too, that's why I put them here
+int four, full_house, three, two_pairs, two, no_pair;
 
-int has_pair(struct card hand[], int number_draws) {
+// This function checks if the hands contains a pair, a three or four and adds it to the counter.
+void analyze_hand(struct card hand[], int number_draws) {
+    
+    int pairs = 0, three_of_a_kind = 0, four_of_a_kind = 0;
     int rank_count[NUM_PIPS] = {0}; // Count occurencies of each rank
+
+    // Increment the rank count for each card in hand
     for (int i = 0; i < number_draws; i++) {
-        rank_count[hand[i].pip]++; // Increment the rank count for each card in hand
+        rank_count[hand[i].pip]++;
     }
 
     for (int i = 0; i < NUM_PIPS; i++) {
-        if (rank_count[i] >=2) {
-        pairs_count++;
-        return 1; // Pair found
+        if (rank_count[i] == 2) {
+            pairs++;
+        } else if (rank_count[i] == 3) {
+            three_of_a_kind++;
+        } else if (rank_count[i] == 4) {
+            four_of_a_kind++;
         }
     }
 
-    return 0; // No pairs found
+    // This logic groups each draw, from the luckiest to the unluckiest
+    if (four_of_a_kind > 0) {
+        four++;
+    } else if (three_of_a_kind && pairs > 0) {
+        full_house++;
+    } else if (three_of_a_kind) {
+        three++;
+    } else if (pairs > 1) {
+        two_pairs++;
+    } else if (pairs == 1) {
+        two++;
+    } else {
+        no_pair++;
+    }
 }
 
 int main(void) {
@@ -74,6 +96,7 @@ int main(void) {
 
     initialize_deck();
 
+    // Draw cards one million times
     for (int draw = 0; draw < DRAW_COUNT; draw++) {
         shuffle_deck();
 
@@ -81,11 +104,31 @@ int main(void) {
             hand[i] = deck[i];
         }
 
-        has_pair(hand, DRAW_SIZE);
+        analyze_hand(hand, DRAW_SIZE);
     }
 
-    float probability = (float)pairs_count / DRAW_COUNT;
-    printf("Probability of a pair: %.6f\n", probability);
+    // Printing all the probabilities here
+    float four_probability = (float)four / DRAW_COUNT;
+    printf("Probability of four of a kind : %.6f\n", four_probability);
+
+    float full_house_probability = (float)full_house / DRAW_COUNT;
+    printf("Probability of full house : %.6f\n", full_house_probability);
+
+    float three_probability = (float)three / DRAW_COUNT;
+    printf("Probability of three of a kind : %.6f\n", three_probability);
+
+    float two_pair_probability = (float)two_pairs / DRAW_COUNT;
+    printf("Probability of two pairs : %.6f\n", two_pair_probability);
+
+    float pair_probability = (float)two / DRAW_COUNT;
+    printf("Probability of a pair : %.6f\n", pair_probability);
+
+    float no_pair_probability = (float)no_pair / DRAW_COUNT;
+    printf("No pair : %.6f\n", no_pair_probability);
+
+    // Added this just to check that it's equal to 1
+    float total = four_probability + full_house_probability + three_probability + two_pair_probability + pair_probability + no_pair_probability;
+    printf("Total : %.6f\n", total);
 
     return 0;
 }
