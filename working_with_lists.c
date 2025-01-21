@@ -14,7 +14,7 @@ typedef struct list {
 list* create_list (int d) 
 {
     // Allocate memory for a new node
-    list* head = malloc ( sizeof(list) );
+    list* head = (list*)malloc ( sizeof(list) );
 
     // Initialize the data field, set the next pointer to NULL (end of the list)
     head -> data = d;
