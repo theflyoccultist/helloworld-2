@@ -121,7 +121,7 @@ struct list* merge_sort(struct list* head) {
     return merge(left_sorted, right_sorted);
 }
 
-// This function unlinks the duplicate node the in next pointer.
+// This function unlinks the duplicate node in next pointer.
 struct list* remove_duplicates(struct list* head) {
     if (head == NULL || head -> next == NULL) return head;
 
@@ -185,7 +185,7 @@ int main() {
     print_list(head);
     printf("\n");
 
-    // Perform merge sort on the list
+    // Perform merge sort on the list, and remove duplicates
     head = merge_sort(head);
     remove_duplicates(head);
 
