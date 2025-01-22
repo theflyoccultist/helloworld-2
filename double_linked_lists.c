@@ -1,3 +1,6 @@
+// Given a list of integers, the program will sort the list using merge sort and remove any duplicates.
+// It uses a doubly linked list to store the integers.
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -12,7 +15,7 @@ typedef struct list {
 } list;
 
 // Function to create a new doubly linked list
-list* create_list (int d) 
+struct list* create_list (int d) 
 {
     struct list* newList = (struct list*)malloc( sizeof(struct list) );
         if (newList == NULL) {
@@ -28,7 +31,7 @@ list* create_list (int d)
 }
 
 // Function to add a new node with data 'd' to the front of the list 'h'
-list* add_to_front(int d, list* h)
+struct list* add_to_front(int d, list* h)
 {
     list* head = create_list(d);
 
@@ -41,7 +44,7 @@ list* add_to_front(int d, list* h)
 }
 
 // Function to convert an array of integers into a linked list
-list* array_to_list(int d[], int size)
+struct list* array_to_list(int d[], int size)
 {
     if (d == NULL || size <= 0) {
     fprintf(stderr, "Invalid array or size\n");
@@ -107,9 +110,7 @@ struct list* merge(struct list* head_a, struct list* head_b) {
 }
 
 struct list* merge_sort(struct list* head) {
-    if (head == NULL || head -> next == NULL) {
-        return head; // if list wih 0 or 1 element is already sorted
-    }
+    if (head == NULL || head -> next == NULL) return head;
 
     struct list* second_half = split_list(head); // Split the list into two halves
 
@@ -118,6 +119,30 @@ struct list* merge_sort(struct list* head) {
     struct list* right_sorted = merge_sort(second_half);
 
     return merge(left_sorted, right_sorted);
+}
+
+// This function unlinks the duplicate node the in next pointer.
+struct list* remove_duplicates(struct list* head) {
+    if (head == NULL || head -> next == NULL) return head;
+
+    struct list* current = head;
+
+    while (current != NULL && current -> next != NULL) {
+        if (current -> data == current -> next -> data) {
+            struct list* duplicate = current -> next;
+
+            current -> next = duplicate -> next;
+
+            if (duplicate -> next != NULL) {
+                duplicate -> next -> prev = current;
+            }
+
+            free(duplicate);
+
+        } else {
+            current = current -> next;
+        }
+    }
 }
 
 // Print the numbers in rows of 5
@@ -162,8 +187,9 @@ int main() {
 
     // Perform merge sort on the list
     head = merge_sort(head);
+    remove_duplicates(head);
 
-    printf("After Sorting:\n");
+    printf("After Sorting and Removing Duplicates:\n");
     print_list(head);
 
     free_list(head); // Free allocated memory
