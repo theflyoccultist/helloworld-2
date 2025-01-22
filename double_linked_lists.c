@@ -143,6 +143,7 @@ struct list* remove_duplicates(struct list* head) {
             current = current -> next;
         }
     }
+    return head;
 }
 
 // Print the numbers in rows of 5
