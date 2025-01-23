@@ -30,27 +30,27 @@ rational* create_rational (int num, int den) {
     return new_rational;
 }
 
-// Function to get the first number of the file
-rational* get_first_number(FILE* file) {
-    int num;
-    fscanf(file, "%d", &num);
-    return create_rational(num, 1);
-}
-
 // Function to loop through the rest of the numbers and pair them as rational numbers
-rational* pair_rational_numbers(FILE* file, rational* head) {
+rational* pair_rational_numbers(FILE* file) {
     int num, den;
-    rational* tail = head;
+    rational* head = NULL;
+    rational* tail = NULL;
 
     // Assuming the first number is already handled
     while (fscanf(file, "%d %d", &num, &den) == 2) {
         rational* new_rational = create_rational(num, den);
-        tail -> next = new_rational;    // Link the new node to the end
-        tail = new_rational;            // Move the tail pointer to the new node
+        if (head == NULL) {
+            head = new_rational;
+            tail = new_rational;
+        } else {
+            tail -> next = new_rational;    // Link the new node to the end
+            tail = new_rational;            // Move the tail pointer to the new node            
+        }
     }
     return head;
 }
 
+// Print the list of rational numbers to the console
 void print_rational_list(rational* head) {
     rational* current = head;
     while (current != NULL) {
@@ -91,10 +91,13 @@ int main (int argc, char* argv[]) {
 
     printf("Reading from %s and writing to %s\n", argv[1], argv[2]);
 
-    rational* size = get_first_number(ifp);
-    printf("First number (array size): %f\n", size -> num);
+    // Skip the first number
+    int first_num;
+    fscanf(ifp, "%d", &first_num);
+    printf("First number (array size): %d\n", first_num);
 
-    rational* head = pair_rational_numbers(ifp, size);
+    rational* head = NULL;
+    head = pair_rational_numbers(ifp);
 
     printf("Printing the list of rational numbers\n");
     print_rational_list(head);
