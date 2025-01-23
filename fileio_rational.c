@@ -59,6 +59,39 @@ void print_rational_list(rational* head) {
     }
 }
 
+// Perform operations on the rational numbers
+rational* addition(rational* r1, rational* r2) {
+    int numerator = (r1 -> num * r2 -> den) + (r1 -> den * r2 -> num);
+    int denominator = r1 -> den * r2 -> den;
+    return create_rational(numerator, denominator);
+}
+
+rational* substraction(rational* r1, rational* r2) {
+    int numerator = (r1 -> num * r2 -> den) - (r1 -> den * r2 -> num);
+    int denominator = r1 -> den * r2 -> den;
+    return create_rational(numerator, denominator);
+}
+
+rational* multiplication(rational* r1, rational* r2) {
+    int numerator = r1 -> num * r2 -> num;
+    int denominator = r1 -> den * r2 -> den;
+    return create_rational(numerator, denominator);
+}
+
+rational* division(rational* r1, rational* r2) {
+    int numerator = r1 -> num * r2 -> den;
+    int denominator = r1 -> den * r2 -> num;
+    return create_rational(numerator, denominator);
+}
+
+//Write the result of those operations to the file
+void write_result_to_file(FILE* ofp, rational* add_result, rational* sub_result, rational* mult_result, rational* div_result) {
+    fprintf(ofp, "Addition: %f/%f\n", add_result -> num, add_result -> den);
+    fprintf(ofp, "Substraction: %f/%f\n", sub_result -> num, sub_result -> den);
+    fprintf(ofp, "Multiplication: %f/%f\n", mult_result -> num, mult_result -> den);
+    fprintf(ofp, "Division: %f/%f\n", div_result -> num, div_result -> den);
+}
+
 // Good to free the memory
 void free_list(rational* head) {
     rational* current = head;
@@ -101,6 +134,28 @@ int main (int argc, char* argv[]) {
 
     printf("Printing the list of rational numbers\n");
     print_rational_list(head);
+
+    rational* rational1 = head;
+    rational* rational2 = head -> next;
+
+    printf("Performing calculations...\n");
+
+    if (rational2 == NULL) {
+        fprintf(stderr, "Not enough rational numbers for operations\n");
+        free_list(head);
+        fclose(ifp);
+        fclose(ofp);
+        exit(1);
+    }
+
+    rational* add_result = addition(rational1, rational2);
+    rational* sub_result = substraction(rational1, rational2);
+    rational* mult_result = multiplication(rational1, rational2);
+    rational* div_result = division(rational1, rational2);
+
+    write_result_to_file(ofp, add_result, sub_result, mult_result, div_result);
+
+    printf("Calculations written on the output file. Closing the program\n");
 
     free_list(head);
     fclose(ifp);
