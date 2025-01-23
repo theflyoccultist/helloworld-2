@@ -60,28 +60,69 @@ void print_rational_list(rational* head) {
 }
 
 // Perform operations on the rational numbers
-rational* addition(rational* r1, rational* r2) {
-    int numerator = (r1 -> num * r2 -> den) + (r1 -> den * r2 -> num);
-    int denominator = r1 -> den * r2 -> den;
-    return create_rational(numerator, denominator);
+rational* addition (rational* head) {
+    if (head == NULL) return NULL;
+
+    int total_num = head -> num;
+    int total_den = head -> den;
+
+    head = head -> next;
+
+    while (head != NULL) {
+        total_num = (total_num * head -> den) + (total_den * head -> num);
+        total_den = total_den * head -> den;
+        head = head -> next;
+    }
+        return create_rational(total_num, total_den);
 }
 
-rational* substraction(rational* r1, rational* r2) {
-    int numerator = (r1 -> num * r2 -> den) - (r1 -> den * r2 -> num);
-    int denominator = r1 -> den * r2 -> den;
-    return create_rational(numerator, denominator);
+rational* substraction(rational* head) {
+    if (head == NULL) return NULL;
+
+    int total_num = head -> num;
+    int total_den = head -> den;
+
+    head = head -> next;    
+
+    while (head != NULL) {
+        total_num = (total_num * head -> den) - (total_den * head -> num);
+        total_den = total_den * head -> den;
+        head = head -> next;
+    }
+        return create_rational(total_num, total_den);
 }
 
-rational* multiplication(rational* r1, rational* r2) {
-    int numerator = r1 -> num * r2 -> num;
-    int denominator = r1 -> den * r2 -> den;
-    return create_rational(numerator, denominator);
+rational* multiplication(rational* head) {
+    if (head == NULL) return NULL;
+
+    int total_num = head -> num;
+    int total_den = head -> den;
+
+    head = head -> next;
+
+    while (head != NULL) {
+        total_num = total_num * head -> num;
+        total_den = total_den * head -> den;
+        head = head -> next;
+    }
+        return create_rational(total_num, total_den);
 }
 
-rational* division(rational* r1, rational* r2) {
-    int numerator = r1 -> num * r2 -> den;
-    int denominator = r1 -> den * r2 -> num;
-    return create_rational(numerator, denominator);
+rational* division(rational* head) {
+    if (head == NULL) return NULL;
+
+    int total_num = head -> num;
+    int total_den = head -> den;
+
+    head = head -> next;
+
+    while (head != NULL) {
+        total_num = total_num * head -> den;
+        total_den = total_den * head -> num;
+        head = head -> next;
+    }
+
+    return create_rational(total_num, total_den);
 }
 
 //Write the result of those operations to the file
@@ -135,29 +176,22 @@ int main (int argc, char* argv[]) {
     printf("Printing the list of rational numbers\n");
     print_rational_list(head);
 
-    rational* rational1 = head;
-    rational* rational2 = head -> next;
-
     printf("Performing calculations...\n");
 
-    if (rational2 == NULL) {
-        fprintf(stderr, "Not enough rational numbers for operations\n");
-        free_list(head);
-        fclose(ifp);
-        fclose(ofp);
-        exit(1);
-    }
-
-    rational* add_result = addition(rational1, rational2);
-    rational* sub_result = substraction(rational1, rational2);
-    rational* mult_result = multiplication(rational1, rational2);
-    rational* div_result = division(rational1, rational2);
+    rational* add_result = addition(head);
+    rational* sub_result = substraction(head);
+    rational* mult_result = multiplication(head);
+    rational* div_result = division(head);
 
     write_result_to_file(ofp, add_result, sub_result, mult_result, div_result);
 
     printf("Calculations written on the output file. Closing the program\n");
 
     free_list(head);
+    free(add_result);
+    free(sub_result);
+    free(mult_result);
+    free(div_result);
     fclose(ifp);
     fclose(ofp);
 
