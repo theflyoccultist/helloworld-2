@@ -1,3 +1,5 @@
+// Generate random weight numbers within a range and assign to elephants
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>

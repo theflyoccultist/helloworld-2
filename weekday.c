@@ -1,3 +1,5 @@
+// Simple enum, case and switch demonstration on C
+
 #include <stdio.h>
 
 enum day {sun, mon, tue, wed, thu, fri, sat};
