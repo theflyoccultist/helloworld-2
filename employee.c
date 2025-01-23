@@ -1,3 +1,6 @@
+// This project assigns salaries to each department.
+// It also generates random social security numbers.
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>

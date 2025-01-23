@@ -1,3 +1,6 @@
+// This is a simple example of a linked list in C.
+// The list is a singly linked list and is stored in a structure using malloc.
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>

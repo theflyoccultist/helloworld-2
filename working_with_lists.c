@@ -1,3 +1,6 @@
+// The program generates a list of random numbers, converts it into a linked list, 
+// and sorts the list using the bubble sort algorithm.
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>

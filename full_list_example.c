@@ -1,3 +1,6 @@
+//A simple example of a linked list in C.
+//This example creates a linked list of integers from an array of integers.
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>

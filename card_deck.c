@@ -1,3 +1,6 @@
+// This project shuffles a deck of cards and draws 7 cards 1 million times.
+// It then calculates the probability of getting a pair, two pairs, three of a kind, full house, and four of a kind.
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
