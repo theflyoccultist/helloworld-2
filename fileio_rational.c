@@ -59,6 +59,23 @@ void print_rational_list(rational* head) {
     }
 }
 
+// Helper function to simplify the rational numbers
+int gcd(int a, int b) {
+    if (b == 0) return a;
+    return gcd(b, a % b);
+}
+
+void simplify_rational(rational* r) {
+    int divisor = gcd(r -> num, r -> den);
+    r -> num /= divisor;
+    r -> den /= divisor;
+
+    if (r -> den < 0) {
+        r -> num = -r -> num;
+        r -> den = -r -> den;
+    }
+}
+
 // Perform operations on the rational numbers
 rational* addition (rational* head) {
     if (head == NULL) return NULL;
@@ -72,8 +89,10 @@ rational* addition (rational* head) {
         total_num = (total_num * head -> den) + (total_den * head -> num);
         total_den = total_den * head -> den;
         head = head -> next;
-    }
-        return create_rational(total_num, total_den);
+    }   
+        rational* total = create_rational(total_num, total_den);
+        simplify_rational(total);
+        return total;
 }
 
 rational* substraction(rational* head) {
@@ -89,7 +108,9 @@ rational* substraction(rational* head) {
         total_den = total_den * head -> den;
         head = head -> next;
     }
-        return create_rational(total_num, total_den);
+        rational* total = create_rational(total_num, total_den);
+        simplify_rational(total);
+        return total;
 }
 
 rational* multiplication(rational* head) {
@@ -105,7 +126,9 @@ rational* multiplication(rational* head) {
         total_den = total_den * head -> den;
         head = head -> next;
     }
-        return create_rational(total_num, total_den);
+        rational* total = create_rational(total_num, total_den);
+        simplify_rational(total);
+        return total;
 }
 
 rational* division(rational* head) {
@@ -122,15 +145,37 @@ rational* division(rational* head) {
         head = head -> next;
     }
 
-    return create_rational(total_num, total_den);
+    rational* total = create_rational(total_num, total_den);
+    simplify_rational(total);
+    return total;
+}
+
+rational* average(rational* head, int size) {
+    if (head == NULL || size == 0) return NULL;
+
+    rational* sum = addition(head);
+    sum -> den *= size;
+
+    simplify_rational(sum);
+    return sum;
 }
 
 //Write the result of those operations to the file
-void write_result_to_file(FILE* ofp, rational* add_result, rational* sub_result, rational* mult_result, rational* div_result) {
+void write_result_to_file(FILE* ofp, rational* add_result, rational* sub_result, rational* mult_result, rational* div_result, rational* avg_result) {
     fprintf(ofp, "Addition: %f/%f\n", add_result -> num, add_result -> den);
     fprintf(ofp, "Substraction: %f/%f\n", sub_result -> num, sub_result -> den);
     fprintf(ofp, "Multiplication: %f/%f\n", mult_result -> num, mult_result -> den);
     fprintf(ofp, "Division: %f/%f\n", div_result -> num, div_result -> den);
+    fprintf(ofp, "Average: %f/%f\n", avg_result -> num, avg_result -> den);
+}
+
+//Write the result of those operations to the console
+void write_result_to_console(rational* add_result, rational* sub_result, rational* mult_result, rational* div_result, rational* avg_result) {
+    printf("Addition: %f/%f\n", add_result -> num, add_result -> den);
+    printf("Substraction: %f/%f\n", sub_result -> num, sub_result -> den);
+    printf("Multiplication: %f/%f\n", mult_result -> num, mult_result -> den);
+    printf("Division: %f/%f\n", div_result -> num, div_result -> den);
+    printf("Average: %f/%f\n", avg_result -> num, avg_result -> den);
 }
 
 // Good to free the memory
@@ -182,8 +227,10 @@ int main (int argc, char* argv[]) {
     rational* sub_result = substraction(head);
     rational* mult_result = multiplication(head);
     rational* div_result = division(head);
+    rational* avg_result = average(head, first_num);
 
-    write_result_to_file(ofp, add_result, sub_result, mult_result, div_result);
+    write_result_to_file(ofp, add_result, sub_result, mult_result, div_result, avg_result);
+    write_result_to_console(add_result, sub_result, mult_result, div_result, avg_result);
 
     printf("Calculations written on the output file. Closing the program\n");
 
@@ -192,6 +239,7 @@ int main (int argc, char* argv[]) {
     free(sub_result);
     free(mult_result);
     free(div_result);
+    free(avg_result);
     fclose(ifp);
     fclose(ofp);
 
