@@ -45,6 +45,14 @@ void inorder_traversal(TreeNode* root) {
     }
 }
 
+void free_tree(TreeNode* root) {
+    if (root != NULL) {
+        free_tree(root->left);
+        free_tree(root->right);
+        free(root);
+    }
+}
+
 int main(int argc, char* argv[]) {
     FILE *ifp;
 
@@ -78,6 +86,8 @@ int main(int argc, char* argv[]) {
     printf("Inorder traversal of the binary tree:\n");
     inorder_traversal(root);
     printf("\n");
+
+    free_tree(root);
 
     // Close the input file
     fclose(ifp);
